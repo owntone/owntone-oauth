@@ -5,13 +5,18 @@
 function echocode()
 {
   const urlParams = new URLSearchParams(window.location.search);
-  document.getElementById("c").innerText = urlParams.get('code');
+  document.getElementById("code").innerText = urlParams.get('code');
 }
 </script>
 </head>
 
 <body onload="echocode();">
-Test
-<div id="c">[code placeholder]</div>
+<form action="http://owntone.local:3689/oauth/spotify" method="get">
+  <label for="fname">Endpoint:</label>
+  <input type="text" id="endpoint" name="endpoint" value="http://owntone.local:3689/oauth/spotify">
+  <label for="code">Code:</label>
+  <input type="text" id="code" name="code" value="[code]">
+  <input type="submit" value="Submit">
+</form>
 </body>
 </html>
