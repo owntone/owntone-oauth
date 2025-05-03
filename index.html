@@ -1,22 +1,126 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<script type="text/javascript">
-function echocode()
-{
-  const urlParams = new URLSearchParams(window.location.search);
-  document.getElementById("code").innerText = urlParams.get('code');
-}
-</script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="generator" content="Claude AI">
+    <title>OAuth redirect</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            color: #333;
+            margin-top: 0;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .code-display {
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: #f0f0f0;
+            border-radius: 4px;
+            border-left: 4px solid #4CAF50;
+        }
+    </style>
 </head>
+<body>
+    <div class="container">
+        <h1>OAuth redirect</h1>
 
-<body onload="echocode();">
-<form action="http://localhost:3689/oauth/spotify" method="get">
-  <label for="fname">Endpoint:</label>
-  <input type="text" id="endpoint" name="endpoint" value="http://localhost:3689/oauth/spotify">
-  <label for="code">Code:</label>
-  <input type="text" id="code" name="code" value="[code]">
-  <input type="submit" value="Submit">
-</form>
+        <div class="code-display">
+            <label for="codeValue">Code from Spotify:</label>
+            <div id="codeValue">Loading...</div>
+        </div>
+        
+        <form id="endpointForm">
+            <div class="form-group">
+                <label for="endpoint">Endpoint URL:</label>
+                <input type="text" id="endpoint" name="endpoint" placeholder="Enter endpoint URL">
+            </div>
+            
+            <div class="form-group">
+                <button type="submit">Send Request</button>
+            </div>
+        </form>
+        
+    </div>
+
+    <script>
+        // Function to get URL parameters
+        function getUrlParameter(name) {
+            name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
+            var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
+            var results = regex.exec(location.search);
+            return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
+        }
+        
+        // Display the code parameter when the page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            const codeParam = getUrlParameter('code');
+            document.getElementById('codeValue').textContent = codeParam || 'No code parameter found';
+                        
+            // Handle form submission
+            document.getElementById('endpointForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                const endpoint = document.getElementById('endpoint').value;
+                const codeParam = getUrlParameter('code');
+                
+                if (endpoint) {                    
+                    // Construct the URL with the code parameter
+                    let targetUrl = endpoint;
+                    if (codeParam) {
+                        // Add the code parameter to the target URL
+                        if (targetUrl.includes('?')) {
+                            targetUrl += '&code=' + encodeURIComponent(codeParam);
+                        } else {
+                            targetUrl += '?code=' + encodeURIComponent(codeParam);
+                        }
+                    }
+                    
+                    // Make the GET request
+                    window.location.href = targetUrl;
+                } else {
+                    alert('Please enter an endpoint URL');
+                }
+            });
+        });
+    </script>
 </body>
 </html>
