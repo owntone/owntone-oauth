@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<meta name="generator" content="Claude AI">
-    <title>OAuth redirect</title>
+    <title>OAuth code forwarding</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -57,12 +57,13 @@
             background-color: #f0f0f0;
             border-radius: 4px;
             border-left: 4px solid #4CAF50;
+            word-wrap: break-word;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>OAuth redirect</h1>
+        <h1>OAuth code forwarding</h1>
 
         <div class="code-display">
             <label for="codeValue">Code from Spotify:</label>
@@ -75,29 +76,21 @@
                 <input type="text" id="address" name="address" value="owntone.local">
                 <label for="port">Server port:</label>
                 <input type="text" id="port" name="port" value="3689">
-                <label for="path">Query path:</label>
-                <input type="text" id="path" name="path" value="/oauth/spotify">
+                <input type="hidden" id="path" name="path" value="/oauth/spotify">
             </div>
             
             <div class="form-group">
-                <button type="submit">Send Request</button>
+                <button type="submit">Forward code to server</button>
             </div>
         </form>
         
     </div>
 
     <script>
-        // Function to get URL parameters
-        function getUrlParameter(name) {
-            name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
-            var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
-            var results = regex.exec(location.search);
-            return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
-        }
+        const urlParams = new URLSearchParams(window.location.search);
+        const codeParam = urlParams.get('code');
         
-        // Display the code parameter when the page loads
         document.addEventListener('DOMContentLoaded', function() {
-            const codeParam = getUrlParameter('code');
             document.getElementById('codeValue').textContent = codeParam || 'No code parameter found';
                         
             // Handle form submission
@@ -106,7 +99,6 @@
                 const address = document.getElementById('address').value;
                 const port = document.getElementById('port').value;
                 const path = document.getElementById('path').value;
-                const codeParam = getUrlParameter('code');
                 
                 if (address && port && codeParam) {
                     let targetUrl = "http://" + address + ":" + port + path + "?code=" + encodeURIComponent(codeParam);
