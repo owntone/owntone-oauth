@@ -71,10 +71,12 @@
         
         <form id="endpointForm">
             <div class="form-group">
-                <label for="endpoint">Server address:</label>
+                <label for="address">Server address:</label>
                 <input type="text" id="address" name="address" value="owntone.local">
-                <label for="endpoint">Server port:</label>
+                <label for="port">Server port:</label>
                 <input type="text" id="port" name="port" value="3689">
+                <label for="path">Query path:</label>
+                <input type="text" id="path" name="path" value="/oauth/spotify">
             </div>
             
             <div class="form-group">
@@ -103,10 +105,11 @@
                 e.preventDefault();
                 const address = document.getElementById('address').value;
                 const port = document.getElementById('port').value;
+                const path = document.getElementById('path').value;
                 const codeParam = getUrlParameter('code');
                 
                 if (address && port && codeParam) {
-                    let targetUrl = "http://" + address + ":" + port + "/oauth/test?code=" + encodeURIComponent(codeParam);                    
+                    let targetUrl = "http://" + address + ":" + port + path + "?code=" + encodeURIComponent(codeParam);
                     window.location.href = targetUrl;
                 } else {
                     alert('Missing address, port or code');
