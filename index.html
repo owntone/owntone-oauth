@@ -71,8 +71,10 @@
         
         <form id="endpointForm">
             <div class="form-group">
-                <label for="endpoint">Endpoint URL:</label>
-                <input type="text" id="endpoint" name="endpoint" placeholder="Enter endpoint URL">
+                <label for="endpoint">Server address:</label>
+                <input type="text" id="address" name="address" value="owntone.local">
+                <label for="endpoint">Server port:</label>
+                <input type="text" id="port" name="port" value="3689">
             </div>
             
             <div class="form-group">
@@ -99,25 +101,15 @@
             // Handle form submission
             document.getElementById('endpointForm').addEventListener('submit', function(e) {
                 e.preventDefault();
-                const endpoint = document.getElementById('endpoint').value;
+                const address = document.getElementById('address').value;
+                const port = document.getElementById('port').value;
                 const codeParam = getUrlParameter('code');
                 
-                if (endpoint) {                    
-                    // Construct the URL with the code parameter
-                    let targetUrl = endpoint;
-                    if (codeParam) {
-                        // Add the code parameter to the target URL
-                        if (targetUrl.includes('?')) {
-                            targetUrl += '&code=' + encodeURIComponent(codeParam);
-                        } else {
-                            targetUrl += '?code=' + encodeURIComponent(codeParam);
-                        }
-                    }
-                    
-                    // Make the GET request
+                if (address && port && codeParam) {
+                    let targetUrl = "http://" + address + ":" + port + "/oauth/test?code=" + encodeURIComponent(codeParam);                    
                     window.location.href = targetUrl;
                 } else {
-                    alert('Please enter an endpoint URL');
+                    alert('Missing address, port or code');
                 }
             });
         });
